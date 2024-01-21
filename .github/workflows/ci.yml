@@ -44,7 +44,7 @@ jobs:
     runs-on: self-hosted
     needs: build-and-push-gcr-image
     steps:
-      - name: Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud 
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SECRET }}
