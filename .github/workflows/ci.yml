@@ -37,8 +37,8 @@ jobs:
           project_id: tradeindia-ai
           image_name: trip-duration-by-push-to-gcr-2
           image_tag: latest
-          dockerfile: ./test/Dockerfile.test
-          context: ./test
+          dockerfile: ./Dockerfile.test
+          context: ./
           target: build
   
   # Continuous-Deployment:
