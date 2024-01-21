@@ -35,39 +35,29 @@ jobs:
           gcloud_service_key: "${{ secrets.GCP_SECRET }}"
           registry: gcr.io
           project_id: tradeindia-ai
-          image_name: trip-duration-by-push-to-gcr-2
+          image_name: trip-duration
           image_tag: latest
           dockerfile: ./Dockerfile
           context: ./
   
-  # Continuous-Deployment:
-  #   runs-on: self-hosted
-  #   needs: build-and-push-ecr-image
-  #   steps:
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ${{ secrets.AWS_REGION }}
-
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v2
+  Continuous-Deployment:
+    runs-on: self-hosted
+    needs: build-and-push-gcr-image
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SECRET }}
       
-  #     - name: Pull latest images
-  #       env:
-  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
-  #         IMAGE_TAG: latest
-  #       run: |
-  #         docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Pull latest images
+        run: |
+          docker pull gcr.io/tradeindia-ai/trip-duration:latest
       
-  #     - name: Delete Previous Container
-  #       run: |
-  #         docker rm -f trip-duration || true
+      - name: Delete Previous Container
+        run: |
+          docker rm -f trip-duration || true
 
-  #     - name: Run Docker Image to serve users
-  #       run: |
-  #         docker run -d -p 8080:8080 --ipc="host" --name=trip-duration -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+      - name: Run Docker Image to serve users
+        run: |
+          docker run -d -p 8080:8080 --ipc="host" --name=trip-duration
       
