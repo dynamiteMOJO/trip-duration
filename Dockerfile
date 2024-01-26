@@ -17,7 +17,7 @@ RUN pip install -r requirements.txt
 # RUN mkdir /app/models
 # RUN aws s3 cp s3://creditcard-project/models/model.joblib /app/models/model.joblib
 
-EXPOSE 8080
+# EXPOSE 8080
 
-# Run app.py when the container launches
-CMD ["python", "service.py"]
+# start the server
+CMD ["uvicorn", "app:service", "--host", "0.0.0.0", "--port", "8080"]
