@@ -55,9 +55,9 @@ jobs:
       
       - name: Delete Previous Container
         run: |
-          docker rm -f trip-duration || true
+          docker rm -f gcr.io/tradeindia-ai/trip-duration || true
 
       - name: Run Docker Image to serve users
         run: |
-          docker run -p 8080:8080 gcr.io/tradeindia-ai/trip-duration:latest
+          docker run -d -p 8080:8080 gcr.io/tradeindia-ai/trip-duration:latest
       
