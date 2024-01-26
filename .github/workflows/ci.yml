@@ -48,7 +48,7 @@ jobs:
       #   uses: google-github-actions/auth@v2
       #   with:
       #     credentials_json: ${{ secrets.GCP_SECRET }}
-      
+      # Removed the google auth and pre authenticated using cloud cli.
       - name: Pull latest images
         run: |
           docker pull gcr.io/tradeindia-ai/trip-duration:latest
